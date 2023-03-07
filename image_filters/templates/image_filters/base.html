@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <title>Image Filters</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'image_filters/styles.css' %}">
+
+    {% block extra_style_sheets %}{% endblock %}
+
+</head>
+
+
+<body>
+    <!-- Top horizontal navigation bar -->
+    <div>
+        <ul class="nav-bar">
+            <li class="nav-bar-item nav-bar-item-active">
+                <a href="#">Home</a>
+            </li>
+            <!-- The following nav bar items are floated right. They are appearing in reverse order--->
+            <li class="nav-bar-item" style="float:right">
+                <a href="#">Sign up</a>
+            </li>
+            <li class="nav-bar-item" style="float:right">
+                <a href="#">Login</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- The following code block displays flash messages if any. Flash messages are those which are displayed only once
+     and they disappear in the next request -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- The following block content will be replaced by templates that inherit this template -->
+    {% block content %}{% endblock %}
+</body>
+
+
+</html>

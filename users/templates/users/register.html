@@ -1,0 +1,32 @@
+{% extends "image_filters/base.html" %}
+
+{% block extra_style_sheets %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'users/styles.css' %}">
+{% endblock extra_style_sheets %}
+
+{% block content %}
+    <div>
+
+        <!-- User Register Form: --->
+        <form method="POST">
+            {% csrf_token %}  <!-- csrf token stands for cross site request forgery token.
+             It protects from certain attacks. If we don't have it, the form doesn't work. -->
+
+            <fieldset>
+                <legend>Join today</legend>
+                {{ form.as_p }}  <!-- "form" is the string key in the "context" dictionary argument of the function call to render.
+                 It is available as variable here. ".as_p" prints the form as a paragraph, so that,
+                 different fields print in different paragraphs-->
+            </fieldset>
+            <div>
+                <button type="submit">Sign Up</button>
+            </div>
+        </form>
+
+        <!-- A link to login if the user had already registered -->
+        <div>
+            <small>Already have an account? <a href="#">Sign in</a></small>
+        </div>
+    </div>
+{% endblock content %}
