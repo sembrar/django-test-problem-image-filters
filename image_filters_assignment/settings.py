@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'image_filters.apps.ImageFiltersConfig',  # add our apps to this, as django searches these for templates, db models
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
