@@ -1,10 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
     <title>Image Filters</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'image_filters/styles.css' %}">
+
 </head>
+
+
 <body>
+    <!-- Top horizontal navigation bar -->
+    <div>
+        <ul class="nav-bar">
+            <li class="nav-bar-item nav-bar-item-active">
+                <a href="#">Home</a>
+            </li>
+            <!-- The following nav bar items are floated right. They are appearing in reverse order--->
+            <li class="nav-bar-item" style="float:right">
+                <a href="#">Sign up</a>
+            </li>
+            <li class="nav-bar-item" style="float:right">
+                <a href="#">Login</a>
+            </li>
+        </ul>
+    </div>
+
     <h1>Image Filters</h1>
+    <p>
+        With this website, we can,
+        <ol>
+            <li>Create an account.</li>
+            <li>Then, upload our images.</li>
+            <li>Scroll through a list of all of our uploaded images.</li>
+            <li>Select one of our images, apply a filter to it, save the output image along with the filter that was applied.</li>
+            <li>Scroll through a list of all our filtered images.</li>
+        </ol>
+    </p>
 </body>
+
+
 </html>
