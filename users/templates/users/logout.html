@@ -1,0 +1,10 @@
+{% extends "image_filters/base.html" %}
+
+{% block content %}
+    <div>
+        <h2>You have been logged out.</h2>
+        <div>
+            <small><a href="{% url 'users-login' %}">Log In</a> again</small>
+        </div>
+    </div>
+{% endblock content %}

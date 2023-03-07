@@ -8,25 +8,24 @@
 {% block content %}
     <div>
 
-        <!-- User Register Form: --->
+        <!-- User Login Form: --->
         <form method="POST">
             {% csrf_token %}  <!-- csrf token stands for cross site request forgery token.
              It protects from certain attacks. If we don't have it, the form doesn't work. -->
 
             <fieldset>
-                <legend>Join today</legend>
-                {{ form.as_p }}  <!-- "form" is the string key in the "context" dictionary argument of the function call to render.
-                 It is available as variable here. ".as_p" prints the form as a paragraph, so that,
-                 different fields print in different paragraphs-->
+                <legend>Log In</legend>
+                {{ form.as_p }}  <!-- Django's LoginView which is a class based view
+                gives the variable "form" which is accessed here in the template -->
             </fieldset>
             <div>
-                <button type="submit">Sign Up</button>
+                <button type="submit">Login</button>
             </div>
         </form>
 
-        <!-- A link to login if the user had already registered -->
+        <!-- A link to Sign up if the user doesn't have an account -->
         <div>
-            <small>Already have an account? <a href="{% url 'users-login' %}">Sign in</a></small>
+            <small>Need an account? <a href="{% url 'users-register' %}">Sign up</a></small>
         </div>
     </div>
 {% endblock content %}
