@@ -22,16 +22,25 @@
                 <li class="nav-bar-item nav-bar-item-active">
                     <a href="#">Home</a>
                 </li>
+                {% if user.is_authenticated %}  <!--user is a variable that django provides-->
+                <li class="nav-bar-item"><a><small>Hello </small>{{ user.username }}</a></li>
+                {% endif %}
             </ul>
         </div>
         <div class="nav-bar-right">
             <ul class="nav-bar" style="float:right">
-                <li class="nav-bar-item">
-                    <a href="#">Login</a>
-                </li>
-                <li class="nav-bar-item">
-                    <a href="#">Sign up</a>
-                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-bar-item">
+                        <a href="{% url 'users-logout' %}">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-bar-item">
+                        <a href="{% url 'users-login' %}">Login</a>
+                    </li>
+                    <li class="nav-bar-item">
+                        <a href="{% url 'users-register' %}">Sign up</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>
