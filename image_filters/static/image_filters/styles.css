@@ -2,12 +2,20 @@ body {
     background-color: #c0c0c0
 }
 
+div.nav-bar {
+    display: flex;
+    background-color: #333;
+}
+
+div.nav-bar-right {
+    flex-grow: 1;
+}
+
 ul.nav-bar {
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #333;
 }
 
 li.nav-bar-item {

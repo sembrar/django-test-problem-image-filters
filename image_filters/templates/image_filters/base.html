@@ -16,19 +16,24 @@
 
 <body>
     <!-- Top horizontal navigation bar -->
-    <div>
-        <ul class="nav-bar">
-            <li class="nav-bar-item nav-bar-item-active">
-                <a href="#">Home</a>
-            </li>
-            <!-- The following nav bar items are floated right. They are appearing in reverse order--->
-            <li class="nav-bar-item" style="float:right">
-                <a href="#">Sign up</a>
-            </li>
-            <li class="nav-bar-item" style="float:right">
-                <a href="#">Login</a>
-            </li>
-        </ul>
+    <div class="nav-bar">
+        <div class="nav-bar-left">
+            <ul class="nav-bar">
+                <li class="nav-bar-item nav-bar-item-active">
+                    <a href="#">Home</a>
+                </li>
+            </ul>
+        </div>
+        <div class="nav-bar-right">
+            <ul class="nav-bar" style="float:right">
+                <li class="nav-bar-item">
+                    <a href="#">Login</a>
+                </li>
+                <li class="nav-bar-item">
+                    <a href="#">Sign up</a>
+                </li>
+            </ul>
+        </div>
     </div>
 
     <!-- The following code block displays flash messages if any. Flash messages are those which are displayed only once
