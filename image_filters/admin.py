@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import UploadedImages
 
-# Register your models here.
+
+admin.site.register(UploadedImages)  # so that the database table of UploadedImages is visible in the admin page
