@@ -1,2 +1,8 @@
+# the idea folder created by PyCharm
 .idea/
 
+# all compiled python files
+*.pyc
+
+# the sqlite database file
+db.sqlite3
