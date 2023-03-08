@@ -8,7 +8,7 @@
         {% for image_obj in uploaded_images %}
             <div>
                 <h2>{{ image_obj.image }}</h2>
-                <a href="#"><img src="{{ image_obj.image.url }}"/></a>
+                <a href="{% url 'image-filters-apply-filter' image_obj.id %}"><img src="{{ image_obj.image.url }}"/></a>
             </div>
         {% endfor %}
     {% endif %}

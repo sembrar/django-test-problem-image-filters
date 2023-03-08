@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import ImageUploadForm
+from .forms import ImageUploadForm, ApplyFilterForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.generic import ListView
@@ -47,3 +47,22 @@ class UserUploadedImagesListView(ListView):
         user = get_object_or_404(User, username=self.request.user)
         return super().get_queryset().filter(owner=user)
         # todo, in the above, .order_by('-date_posted') after adding that field to the UploadedImages Model
+
+
+def apply_filter(request, **kwargs):  # kwargs will be a dict with a key "pk" whose corresponding value is image-id
+    # see the comments in "register" function in "users/views.py", because, the logic used below is exactly similar
+
+    image_obj = get_object_or_404(UploadedImages, id=kwargs["pk"])
+
+    if request.method == "POST":
+        print("#" * 8, request.POST)
+        form = ApplyFilterForm(request.POST)
+        if form.is_valid():
+            messages.success(request, f"Apply filter succeeded.")
+            # todo redirect here, or else, browser will ask "resubmit?" if user pressed refresh
+            pass
+        else:
+            messages.error(request, f"Apply filter failed.")
+    else:
+        form = ApplyFilterForm()
+    return render(request, "image_filters/apply-filter.html", {"form": form, "image_url": image_obj.image.url})

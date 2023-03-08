@@ -1,0 +1,34 @@
+{% extends "image_filters/base.html" %}
+
+{% block extra_style_sheets %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'image_filters/styles-for-apply-filter-page.css' %}">
+{% endblock extra_style_sheets %}
+
+{% block content %}
+    <div class="apply-filters">
+
+        <div>
+            <form method="POST">
+                {% csrf_token %}  <!-- csrf token stands for cross site request forgery token.
+                 It protects from certain attacks. If we don't have it, the form doesn't work. -->
+
+                <fieldset>
+                    <legend>Apply filter:</legend>
+                    {{ form.as_p }}  <!-- "form" is the string key in the "context" dictionary argument of the function call to render.
+                     It is available as variable here. ".as_p" prints the form as a paragraph, so that,
+                     different fields print in different paragraphs-->
+                </fieldset>
+
+                <div>
+                    <input type="submit" name="preview_button" value="Preview">
+                    <input type="submit" name="save_button" value="Save">
+                </div>
+            </form>
+        </div>
+
+        <div>
+            <img src="{{ image_url }}">
+        </div>
+    </div>
+{% endblock content %}

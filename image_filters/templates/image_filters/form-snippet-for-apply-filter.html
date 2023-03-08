@@ -1,0 +1,33 @@
+<!-- See https://docs.djangoproject.com/en/4.1/ref/forms/widgets/#django.forms.RadioSelect -->
+{% for filter in form.filters %}
+    <div class="fieldWrapper">
+        {{ filter.errors }}
+        {{ filter.label_tag }} {{ filter }}
+        <div>
+            {% if filter.choice_label == "Gaussian Blur" %}
+                <div class="fieldWrapper">
+                    {{ form.gaussian_filter_kernel_size.errors }}
+                    {{ form.gaussian_filter_kernel_size.label_tag }} {{ form.gaussian_filter_kernel_size }}
+                    {{ form.gaussian_filter_kernel_size.help_text }}
+                </div>
+            {% elif filter.choice_label == "Canny Edge Detection" %}
+                <div class="fieldWrapper">
+                    {{ form.canny_edge_detection_filter_threshold1.errors }}
+                    {{ form.canny_edge_detection_filter_threshold1.label_tag }} {{ form.canny_edge_detection_filter_threshold1 }}
+                </div>
+                <div class="fieldWrapper">
+                    {{ form.canny_edge_detection_filter_threshold2.errors }}
+                    {{ form.canny_edge_detection_filter_threshold2.label_tag }} {{ form.canny_edge_detection_filter_threshold2 }}
+                </div>
+                <div class="fieldWrapper">
+                    {{ form.canny_edge_detection_filter_apertureSize.errors }}
+                    {{ form.canny_edge_detection_filter_apertureSize.label_tag }} {{ form.canny_edge_detection_filter_apertureSize }}
+                </div>
+                <div class="fieldWrapper">
+                    {{ form.canny_edge_detection_filter_gradient.errors }}
+                    {{ form.canny_edge_detection_filter_gradient.label_tag }} {{ form.canny_edge_detection_filter_gradient }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}
