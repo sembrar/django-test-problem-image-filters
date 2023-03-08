@@ -1,7 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .forms import ImageUploadForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.views.generic import ListView
+from .models import UploadedImages
+from django.contrib.auth.models import User
 
 
 def home(request):
@@ -31,3 +34,18 @@ def upload_image(request):
         form = ImageUploadForm()
 
     return render(request, "image_filters/upload.html", {'form': form})
+
+
+class UserUploadedImagesListView(ListView):
+    # a ListView is a generic class view that takes a Model that it queries and shows as list
+
+    model = UploadedImages
+    template_name = "image_filters/uploaded-images.html"
+    context_object_name = "uploaded_images"  # this is the variable name that will be available in the template
+
+    # we overload the following method to filter the images by "user", so that,
+    # only the images uploaded by current user are sent to the template html
+    def get_queryset(self):
+        user = get_object_or_404(User, username=self.request.user)
+        return super().get_queryset().filter(owner=user)
+        # todo, in the above, .order_by('-date_posted') after adding that field to the UploadedImages Model

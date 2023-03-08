@@ -1,0 +1,15 @@
+{% extends "image_filters/base.html" %}
+
+{% block content %}
+    {% if uploaded_images.count == 0 %}
+        <h2>No images have been uploaded yet.</h2>
+        <p><a href="{% url 'image-filters-upload' %}">Upload</a></p>
+    {% else %}
+        {% for image_obj in uploaded_images %}
+            <div>
+                <h2>{{ image_obj.image }}</h2>
+                <a href="#"><img src="{{ image_obj.image.url }}"/></a>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock content %}
