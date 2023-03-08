@@ -1,0 +1,24 @@
+{% extends "image_filters/base.html" %}
+
+{% block content %}
+    <div>
+
+        <form method="POST" enctype="multipart/form-data">  <!--the enctype is required for the uploaded image to be saved-->
+
+            {% csrf_token %}  <!-- csrf token stands for cross site request forgery token.
+             It protects from certain attacks. If we don't have it, the form doesn't work. -->
+
+            <fieldset>
+                <legend>Upload image:</legend>
+                {{ form.as_p }}  <!-- "form" is the string key in the
+                 "context" dictionary argument of the function call to render.
+                 It is available as variable here. ".as_p" prints the form as a paragraph, so that,
+                 different fields print in different paragraphs-->
+            </fieldset>
+            <div>
+                <button type="submit">Upload</button>
+            </div>
+        </form>
+
+    </div>
+{% endblock content %}

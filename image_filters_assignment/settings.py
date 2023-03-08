@@ -132,3 +132,5 @@ MEDIA_URL = 'media/'  # media url is the public url of that directory, i.e.
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = 'image-filters-home'  # otherwise, after log in, django redirects to /accounts/profile.html
+LOGIN_URL = 'users-login'  # otherwise, when django searches for login page at /accounts/login.html
+# the above is used by login_required decorator (which makes sure that a user is logged in before accessing upload page

@@ -1,6 +1,9 @@
 # the idea folder created by PyCharm
 .idea/
 
+# the folder where user-uploaded files are saved
+media/
+
 # all compiled python files
 *.pyc
 
