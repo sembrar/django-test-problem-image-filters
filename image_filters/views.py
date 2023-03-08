@@ -5,6 +5,9 @@ from django.contrib import messages
 from django.views.generic import ListView
 from .models import UploadedImages
 from django.contrib.auth.models import User
+from django.conf import settings
+import os
+import cv2
 
 
 def home(request):
@@ -53,16 +56,91 @@ def apply_filter(request, **kwargs):  # kwargs will be a dict with a key "pk" wh
     # see the comments in "register" function in "users/views.py", because, the logic used below is exactly similar
 
     image_obj = get_object_or_404(UploadedImages, id=kwargs["pk"])
+    image_url = image_obj.image.url
 
     if request.method == "POST":
         print("#" * 8, request.POST)
         form = ApplyFilterForm(request.POST)
+
         if form.is_valid():
-            messages.success(request, f"Apply filter succeeded.")
-            # todo redirect here, or else, browser will ask "resubmit?" if user pressed refresh
-            pass
+
+            print("#"*10, image_obj.image.path, "#"*10)
+            filtered_image, filter_name_to_save = get_filtered_image(request, image_obj.image.path)
+            messages.success(request, f"{filter_name_to_save} applied successfully")
+
+            if 'save_button' in request.POST:
+                # Save button is clicked, image must be saved along with the filter applied
+                pass
+            else:  # Preview button is clicked
+                temp_dir = os.path.join(settings.MEDIA_ROOT, "temp")
+                if not os.path.isdir(temp_dir):
+                    os.makedirs(temp_dir)
+                temp_img_save_path = os.path.join(temp_dir, f"{request.user.username}-{image_obj.image.name}")
+                print("Temp img save path:", temp_img_save_path)
+                cv2.imwrite(temp_img_save_path, filtered_image)
+                filtered_image_url = os.path.join(settings.MEDIA_URL, f"temp/{request.user.username}-{image_obj.image.name}")
+                image_url = filtered_image_url
+
+            # (discarded) redirect here, or else, browser will ask "resubmit?" if user pressed refresh
+            # return redirect(request.path)  # discarded as it clears the form, (user shouldn't press refresh instead)
         else:
             messages.error(request, f"Apply filter failed.")
     else:
         form = ApplyFilterForm()
-    return render(request, "image_filters/apply-filter.html", {"form": form, "image_url": image_obj.image.url})
+    return render(request, "image_filters/apply-filter.html", {"form": form, "image_url": image_url})
+
+
+def get_filtered_image(request, original_image_path):
+    # form data is valid in the request (except may be even numbers for kernel size)
+
+    filter_type = request.POST["filters"]
+
+    if filter_type == "grayscale":
+
+        filtered_image = cv2.imread(original_image_path, cv2.IMREAD_GRAYSCALE)
+        filter_name_to_save = "Grayscale"
+
+    elif filter_type == "sepia":
+
+        img = cv2.imread(original_image_path, cv2.IMREAD_COLOR)
+
+        # the following sepia is learnt from: https://stackoverflow.com/questions/1061093/how-is-a-sepia-tone-created
+        b = img[:, :, 0]
+        g = img[:, :, 1]
+        r = img[:, :, 2]
+        filtered_image = cv2.multiply(img, 0)
+        filtered_image[:, :, 0] = cv2.add(cv2.add(cv2.multiply(r, 0.272), cv2.multiply(g, 0.534)), cv2.multiply(b, 0.131))
+        filtered_image[:, :, 1] = cv2.add(cv2.add(cv2.multiply(r, 0.349), cv2.multiply(g, 0.686)), cv2.multiply(b, 0.168))
+        filtered_image[:, :, 2] = cv2.add(cv2.add(cv2.multiply(r, 0.393), cv2.multiply(g, 0.769)), cv2.multiply(b, 0.189))
+
+        filter_name_to_save = "Sepia"
+
+    elif filter_type == "gaussian_blur":
+        kernel_size = int(request.POST["gaussian_filter_kernel_size"])
+        # Gaussian blur requires that kernel size be odd. So, if it is even, we subtract 1.
+        # The form makes sure that the least value we get is 3 and the highest value is 99.
+        # So, subtraction when it's an odd number will never make it 0.
+        if kernel_size % 2 == 0:
+            kernel_size -= 1
+
+        img = cv2.imread(original_image_path, cv2.IMREAD_UNCHANGED)
+
+        filtered_image = cv2.GaussianBlur(img, (kernel_size, kernel_size), 0)
+        filter_name_to_save = f"Gaussian Blur with kernel size {kernel_size}"
+
+    else:
+
+        thresh1 = int(request.POST["canny_edge_detection_filter_threshold1"])
+        thresh2 = int(request.POST["canny_edge_detection_filter_threshold2"])
+        aperture_size = int(request.POST["canny_edge_detection_filter_apertureSize"])
+        use_l2gradient = request.POST["canny_edge_detection_filter_gradient"] == "l2gradient"
+        print("Canny:", thresh1, thresh2, aperture_size, use_l2gradient)
+
+        grayscale = cv2.imread(original_image_path, cv2.IMREAD_GRAYSCALE)
+        filtered_image = cv2.Canny(grayscale, thresh1, thresh2,
+                                   apertureSize=aperture_size, L2gradient=use_l2gradient)
+
+        filter_name_to_save = f"Canny Edge Detection with thresholds:({thresh1},{thresh2})," \
+                              f" apertureSize:{aperture_size}, Gradient:L{2 if use_l2gradient else 1}"
+
+    return filtered_image, filter_name_to_save

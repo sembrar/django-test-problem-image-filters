@@ -26,13 +26,14 @@ class ApplyFilterForm(forms.Form):
             ("canny_edge_detection", "Canny Edge Detection"),
         ),
         widget=forms.RadioSelect,
+        initial="grayscale",
     )
 
-    gaussian_filter_kernel_size = forms.IntegerField(label="Kernel size", min_value=1, max_value=99, initial=5)
+    gaussian_filter_kernel_size = forms.IntegerField(label="Kernel size", min_value=3, max_value=99, initial=5)
 
     canny_edge_detection_filter_threshold1 = forms.IntegerField(label="threshold1", max_value=255, min_value=0, initial=100)
     canny_edge_detection_filter_threshold2 = forms.IntegerField(label="threshold2", max_value=255, min_value=0, initial=200)
-    canny_edge_detection_filter_apertureSize = forms.IntegerField(label="apertureSize", min_value=1, max_value=99, initial=3)
+    canny_edge_detection_filter_apertureSize = forms.IntegerField(label="apertureSize", min_value=3, max_value=99, initial=3)
     canny_edge_detection_filter_gradient = forms.ChoiceField(
         label="gradient",
         choices=(
