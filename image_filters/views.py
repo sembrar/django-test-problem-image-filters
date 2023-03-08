@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .forms import ImageUploadForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -22,12 +22,10 @@ def upload_image(request):
             messages.success(request, f'Image "{request.FILES.get("image")}" uploaded successfully.'
                                       f' Upload another or navigate to home page using navbar.')
 
-            # form = ImageUploadForm()  # a new empty form so that the fields are cleared
-            # NOT REQUIRED: the above empty form is not required, as, while testing, it was seen that
-            # the image field was being emptied when an image is uploaded by pressing the submit button
-
-            # Note: unlike in "register" function of "users/views.py", here, we are not redirecting to any other page,
+            return redirect('image-filters-upload')  # we redirect to the same upload form,
             # because, we want the user to be able to upload any number of images one by one.
+            # Also, we must redirect, because, if we instead let it go to the render function, even though it renders
+            # the same upload form, if the user refreshes the page, the browser says "Do you want to re-submit?"
         else:
             messages.error(request, f"Image upload failed. Please see the error message below and try again.")
     else:
