@@ -16,8 +16,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+# the following two lines are from
+# https://docs.djangoproject.com/en/4.1/howto/static-files/#serving-files-uploaded-by-a-user-during-development
+from django.conf import settings
+from django.conf.urls.static import static
+
+
 urlpatterns = [
     path('', include('image_filters.urls')),
     path('user/', include('users.urls')),
     path('admin/', admin.site.urls),
 ]
+
+# the following line (though a little bit modified) is also from
+# https://docs.djangoproject.com/en/4.1/howto/static-files/#serving-files-uploaded-by-a-user-during-development
+# fixme they suggest this way for serving user uploaded files during development,
+#  but they suggest another way for production
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -120,6 +120,12 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+MEDIA_ROOT = BASE_DIR / 'media'  # media root is the root folder where the uploaded image files will be saved
+# in the disk, in the above line, it is set to a directory named "media" inside base_dir which is the directory
+# that this django project resides in
+MEDIA_URL = 'media/'  # media url is the public url of that directory, i.e.
+# how we will access the above directory in the browser
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
