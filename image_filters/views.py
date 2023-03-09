@@ -3,7 +3,7 @@ from .forms import ImageUploadForm, ApplyFilterForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.generic import ListView
-from .models import UploadedImages
+from .models import UploadedImages, FilteredImage
 from django.contrib.auth.models import User
 from django.conf import settings
 import os
@@ -59,27 +59,54 @@ def apply_filter(request, **kwargs):  # kwargs will be a dict with a key "pk" wh
     image_url = image_obj.image.url
 
     if request.method == "POST":
-        print("#" * 8, request.POST)
         form = ApplyFilterForm(request.POST)
 
         if form.is_valid():
-
-            print("#"*10, image_obj.image.path, "#"*10)
             filtered_image, filter_name_to_save = get_filtered_image(request, image_obj.image.path)
             messages.success(request, f"{filter_name_to_save} applied successfully")
 
             if 'save_button' in request.POST:
                 # Save button is clicked, image must be saved along with the filter applied
-                pass
-            else:  # Preview button is clicked
+
+                # create save directory if it doesn't exist (media/save/)
+                save_dir = os.path.join(settings.MEDIA_ROOT, "save")
+                if not os.path.isdir(save_dir):
+                    os.makedirs(save_dir)
+
+                # generate the unique name of the filtered file: (username + filter_name + image_name)
+                img_save_name = f"{request.user.username}" \
+                                f"-{filter_name_to_save.replace(':', '-')}" \
+                                f"-{image_obj.image.name}"
+
+                # save the filtered image
+                img_save_path = os.path.join(save_dir, img_save_name)
+                cv2.imwrite(img_save_path, filtered_image)
+
+                # generate the filtered image url, so that, at the bottom of the function, it is passed in context,
+                # and the filtered image is shown on screen
+                filtered_image_url = os.path.join(settings.MEDIA_URL, f"save/{img_save_name}")
+
+                # save a "FilteredImage" model object:
+                FilteredImage(owner=request.user, file_name=img_save_name, filter_name=filter_name_to_save,
+                              original_img=image_obj).save()
+
+            else:
+                # Preview button is clicked, save it in a temporary spot display it on the page
+
+                # create temporary save directory (media/temp/)
                 temp_dir = os.path.join(settings.MEDIA_ROOT, "temp")
                 if not os.path.isdir(temp_dir):
                     os.makedirs(temp_dir)
+
+                # save the filtered image
                 temp_img_save_path = os.path.join(temp_dir, f"{request.user.username}-{image_obj.image.name}")
-                print("Temp img save path:", temp_img_save_path)
                 cv2.imwrite(temp_img_save_path, filtered_image)
+
+                # generate the filtered image url, so that, at the bottom of the function, it is passed in context,
+                # and the filtered image is shown on screen
                 filtered_image_url = os.path.join(settings.MEDIA_URL, f"temp/{request.user.username}-{image_obj.image.name}")
-                image_url = filtered_image_url
+
+            image_url = filtered_image_url  # this is used in the "context" argument at the bottom of the function
 
             # (discarded) redirect here, or else, browser will ask "resubmit?" if user pressed refresh
             # return redirect(request.path)  # discarded as it clears the form, (user shouldn't press refresh instead)
@@ -134,7 +161,6 @@ def get_filtered_image(request, original_image_path):
         thresh2 = int(request.POST["canny_edge_detection_filter_threshold2"])
         aperture_size = int(request.POST["canny_edge_detection_filter_apertureSize"])
         use_l2gradient = request.POST["canny_edge_detection_filter_gradient"] == "l2gradient"
-        print("Canny:", thresh1, thresh2, aperture_size, use_l2gradient)
 
         grayscale = cv2.imread(original_image_path, cv2.IMREAD_GRAYSCALE)
         filtered_image = cv2.Canny(grayscale, thresh1, thresh2,

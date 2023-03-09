@@ -11,6 +11,8 @@ class UploadedImages(models.Model):
 
 class FilteredImage(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    file_name = models.CharField(max_length=200)
+    file_name = models.CharField(max_length=200, primary_key=True)  # file name will be unique, and also,
+    # there should only be one entry for a unique combination of {username, filter-settings, original-filename}, and
+    # this is what is also file_name is made up of
     filter_name = models.CharField(max_length=100)
     original_img = models.ForeignKey(UploadedImages, on_delete=models.CASCADE)
