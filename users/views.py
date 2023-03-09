@@ -28,11 +28,11 @@ def register(request):
             # now we will display a flash message
             # a flash message is displayed only once and it disappears in the next request
             username = form.cleaned_data.get('username')  # cleaned_data is a dictionary
-            messages.success(request, f"Account created for {username}!")
+            messages.success(request, f"Account created for {username}! Please login to continue.")
 
             # now, as the form is valid and the new user is created, we redirect the user to other page, because
             # it can be confusing if the form is displayed again
-            return redirect("image-filters-home")
+            return redirect("users-login")
     else:
         # we are in the "else" block, that means "request method is not POST", in other words,
         # a user navigated to the register page, so we just create an empty form here in the next line

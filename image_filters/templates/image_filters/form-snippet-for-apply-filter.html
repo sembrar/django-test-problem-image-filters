@@ -3,7 +3,7 @@
     <div class="fieldWrapper">
         {{ filter.errors }}
         {{ filter.label_tag }} {{ filter }}
-        <div>
+        <div style="margin-left:40px;">
             {% if filter.choice_label == "Gaussian Blur" %}
                 <div class="fieldWrapper">
                     {{ form.gaussian_filter_kernel_size.errors }}

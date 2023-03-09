@@ -13,6 +13,7 @@
             <div>
                 <h2>{{ image_obj.image }}</h2>
                 <a href="{% url 'image-filters-apply-filter' image_obj.id %}"><img src="{{ image_obj.image.url }}"/></a>
+                <hr>
             </div>
         {% endfor %}
     {% endif %}
