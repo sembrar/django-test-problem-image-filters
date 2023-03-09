@@ -19,25 +19,34 @@
     <div class="nav-bar">
         <div class="nav-bar-left">
             <ul class="nav-bar">
-                <li class="nav-bar-item nav-bar-item-active">
-                    <a href="#">Home</a>
+                <li class="nav-bar-item nav-bar-title-page">
+                    <a href="/"><strong>Image Filters</strong></a>
                 </li>
                 {% if user.is_authenticated %}  <!--user is a variable that django provides-->
-                <li class="nav-bar-item"><a><small>Hello </small>{{ user.username }}</a></li>
+                <li class="nav-bar-item"><a><small>Hello </small><strong>{{ user.username }}</strong></a></li>
+                <li class="nav-bar-item nav-bar-uploaded-images-page">
+                    <a href="{% url 'image-filters-uploaded-images' %}">My Uploaded Images</a>
+                </li>
+                <li class="nav-bar-item nav-bar-filtered-images-page">
+                    <a href="{% url 'image-filters-filtered-images' %}">My Filtered Images</a>
+                </li>
                 {% endif %}
             </ul>
         </div>
         <div class="nav-bar-right">
             <ul class="nav-bar" style="float:right">
                 {% if user.is_authenticated %}
-                    <li class="nav-bar-item">
+                    <li class="nav-bar-item nav-bar-upload-page">
+                        <a href="{% url 'image-filters-upload' %}">Upload New Image</a>
+                    </li>
+                    <li class="nav-bar-item nav-bar-logout-page">
                         <a href="{% url 'users-logout' %}">Logout</a>
                     </li>
                 {% else %}
-                    <li class="nav-bar-item">
+                    <li class="nav-bar-item nav-bar-login-page">
                         <a href="{% url 'users-login' %}">Login</a>
                     </li>
-                    <li class="nav-bar-item">
+                    <li class="nav-bar-item nav-bar-register-page">
                         <a href="{% url 'users-register' %}">Sign up</a>
                     </li>
                 {% endif %}

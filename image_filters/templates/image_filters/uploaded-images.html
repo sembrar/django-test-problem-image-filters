@@ -1,5 +1,9 @@
 {% extends "image_filters/base.html" %}
 
+{% block extra_style_sheets %}
+    <style>li.nav-bar-uploaded-images-page { background-color: green; }</style>
+{% endblock extra_style_sheets %}
+
 {% block content %}
     {% if uploaded_images.count == 0 %}
         <h2>No images have been uploaded yet.</h2>

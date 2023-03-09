@@ -35,10 +35,6 @@ li.nav-bar-item a:hover {
     background-color: #111;
 }
 
-li.nav-bar-item-active {
-    background-color: green;
-}
-
 div.alert {
 }
 
