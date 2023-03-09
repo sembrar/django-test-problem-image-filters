@@ -162,6 +162,9 @@ def get_filtered_image(request, original_image_path):
         aperture_size = int(request.POST["canny_edge_detection_filter_apertureSize"])
         use_l2gradient = request.POST["canny_edge_detection_filter_gradient"] == "l2gradient"
 
+        if aperture_size % 2 == 0:
+            aperture_size -= 1
+
         grayscale = cv2.imread(original_image_path, cv2.IMREAD_GRAYSCALE)
         filtered_image = cv2.Canny(grayscale, thresh1, thresh2,
                                    apertureSize=aperture_size, L2gradient=use_l2gradient)
