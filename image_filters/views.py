@@ -170,3 +170,19 @@ def get_filtered_image(request, original_image_path):
                               f" apertureSize:{aperture_size}, Gradient:L{2 if use_l2gradient else 1}"
 
     return filtered_image, filter_name_to_save
+
+
+class UserFilteredImagesListView(ListView):
+    # a ListView is a generic class view that takes a Model that it queries and shows as list
+
+    model = FilteredImage
+    template_name = "image_filters/filtered-images.html"
+    context_object_name = "filtered_images"  # this is the variable name that will be available in the template
+    extra_context = {"filtered_image_root_url": os.path.join(settings.MEDIA_URL, "save")}
+
+    # we overload the following method to filter the images by "user", so that,
+    # only the images uploaded by current user are sent to the template html
+    def get_queryset(self):
+        user = get_object_or_404(User, username=self.request.user)
+        return super().get_queryset().filter(owner=user)
+        # todo, in the above, .order_by('-date_posted') after adding that field to the UploadedImages Model

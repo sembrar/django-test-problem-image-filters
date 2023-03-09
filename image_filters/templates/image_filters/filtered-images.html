@@ -1,0 +1,19 @@
+{% extends "image_filters/base.html" %}
+
+{% block content %}
+    {% if filtered_images.count == 0 %}
+        <h2>No images have been created by applying filters yet.</h2>
+        <p>Go to <a href="{% url 'image-filters-uploaded-images' %}">uploaded images</a> to get started.</p>
+    {% else %}
+        {% for image_obj in filtered_images %}
+            <div>
+                <div style="display: flex;">
+                    <h2>Image: <a href="{% url 'image-filters-apply-filter' image_obj.original_img.id %}">{{ image_obj.original_img.image.name }}</a></h2>
+                </div>
+                <h3>Filter applied: {{ image_obj.filter_name }}</h3>
+                <img src="{{ filtered_image_root_url }}/{{ image_obj.file_name }}"/>
+                <hr>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock content %}
